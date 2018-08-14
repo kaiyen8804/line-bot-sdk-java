@@ -26,15 +26,14 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import com.google.common.collect.Lists;
 import com.linecorp.bot.client.LineMessagingClient;
+import com.linecorp.bot.model.PushMessage;
 import com.linecorp.bot.model.ReplyMessage;
 import com.linecorp.bot.model.event.Event;
 import com.linecorp.bot.model.event.JoinEvent;
 import com.linecorp.bot.model.event.MessageEvent;
 import com.linecorp.bot.model.event.message.TextMessageContent;
 import com.linecorp.bot.model.event.source.GroupSource;
-import com.linecorp.bot.model.message.Message;
 import com.linecorp.bot.model.message.TextMessage;
-import com.linecorp.bot.model.response.BotApiResponse;
 import com.linecorp.bot.spring.boot.annotation.EventMapping;
 import com.linecorp.bot.spring.boot.annotation.LineMessageHandler;
 
@@ -51,6 +50,11 @@ public class EchoApplication {
 	
     public static void main(String[] args) {
         SpringApplication.run(EchoApplication.class, args);
+    }
+    
+    @EventMapping
+    public void handleTextMessageEvent(MessageEvent<TextMessageContent> event) throws Exception {
+        lineMessagingClient.pushMessage(new PushMessage(event.getSource().getSenderId(), new TextMessage(event.getMessage().getText())));
     }
     
     @EventMapping
