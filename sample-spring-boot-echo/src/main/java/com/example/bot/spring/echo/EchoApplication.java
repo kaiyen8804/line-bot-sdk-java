@@ -16,27 +16,67 @@
 
 package com.example.bot.spring.echo;
 
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+import com.google.common.collect.Lists;
+import com.linecorp.bot.client.LineMessagingClient;
+import com.linecorp.bot.model.ReplyMessage;
 import com.linecorp.bot.model.event.Event;
+import com.linecorp.bot.model.event.JoinEvent;
 import com.linecorp.bot.model.event.MessageEvent;
 import com.linecorp.bot.model.event.message.TextMessageContent;
+import com.linecorp.bot.model.event.source.GroupSource;
 import com.linecorp.bot.model.message.Message;
 import com.linecorp.bot.model.message.TextMessage;
+import com.linecorp.bot.model.response.BotApiResponse;
 import com.linecorp.bot.spring.boot.annotation.EventMapping;
 import com.linecorp.bot.spring.boot.annotation.LineMessageHandler;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @SpringBootApplication
 @LineMessageHandler
 public class EchoApplication {
+	
+	protected List<String> groupIds = Lists.newArrayList();
+	@Autowired
+	private LineMessagingClient lineMessagingClient;
+	
     public static void main(String[] args) {
         SpringApplication.run(EchoApplication.class, args);
     }
 
     @EventMapping
     public Message handleTextMessageEvent(MessageEvent<TextMessageContent> event) {
-        return new TextMessage(event.getSource().getUserId());
+    	if(Math.random() > 0.7) {
+    		return new TextMessage("[alarm] iEN is on fire");
+    	} else {
+    		return null;
+    	}
+    }
+    
+    @EventMapping
+    public void handleJoinEvent(JoinEvent event) {
+    	try {
+	        String replyToken = event.getReplyToken();
+	        BotApiResponse apiResponse = lineMessagingClient
+	                .replyMessage(new ReplyMessage(replyToken, Collections.singletonList(new TextMessage("Welcome to iEN"))))
+	                .get();
+	        log.info("Sent messages: {}", apiResponse);
+	        if(event.getSource() instanceof GroupSource) {
+	        	groupIds.add(((GroupSource) event.getSource()).getGroupId());
+	        }
+    	} catch(InterruptedException | ExecutionException e) {
+    		throw new RuntimeException(e);
+    	}
     }
 
     @EventMapping
