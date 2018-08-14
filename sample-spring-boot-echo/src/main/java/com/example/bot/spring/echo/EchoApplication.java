@@ -17,7 +17,6 @@
 package com.example.bot.spring.echo;
 
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
@@ -53,26 +52,18 @@ public class EchoApplication {
     public static void main(String[] args) {
         SpringApplication.run(EchoApplication.class, args);
     }
-
-    @EventMapping
-    public Message handleTextMessageEvent(MessageEvent<TextMessageContent> event) {
-    	if(Math.random() > 0.7) {
-    		return new TextMessage("[alarm] iEN is on fire");
-    	} else {
-    		return null;
-    	}
-    }
     
     @EventMapping
     public void handleJoinEvent(JoinEvent event) {
     	try {
 	        String replyToken = event.getReplyToken();
-	        BotApiResponse apiResponse = lineMessagingClient
+	        lineMessagingClient
 	                .replyMessage(new ReplyMessage(replyToken, Collections.singletonList(new TextMessage("Welcome to iEN"))))
-	                .get();
-	        log.info("Sent messages: {}", apiResponse);
+	                .get();	        
 	        if(event.getSource() instanceof GroupSource) {
-	        	groupIds.add(((GroupSource) event.getSource()).getGroupId());
+	        	String groupId = ((GroupSource) event.getSource()).getGroupId(); 
+	        	groupIds.add(groupId);
+	        	log.info("group Id: {}", groupId);
 	        }
     	} catch(InterruptedException | ExecutionException e) {
     		throw new RuntimeException(e);
