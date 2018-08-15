@@ -33,6 +33,7 @@ import com.linecorp.bot.model.message.Message;
 import com.linecorp.bot.model.message.TextMessage;
 import com.linecorp.bot.spring.boot.annotation.EventMapping;
 import com.linecorp.bot.spring.boot.annotation.LineMessageHandler;
+import com.linecorp.bot.spring.boot.support.ChannelTokenCache;
 import com.linecorp.bot.spring.boot.support.LineMessagingClientFactory;
 
 import lombok.extern.slf4j.Slf4j;
@@ -45,6 +46,8 @@ public class EchoApplication {
 	protected List<String> groupIds = Lists.newArrayList();
     @Autowired
     private LineMessagingClientFactory lineMessagingClientFactory;
+    @Autowired
+    private ChannelTokenCache channelTokenCache;
 	
     public static void main(String[] args) {
         SpringApplication.run(EchoApplication.class, args);
@@ -52,7 +55,7 @@ public class EchoApplication {
     
     @EventMapping
     public void handleTextMessageEvent(MessageEvent<TextMessageContent> event) throws Exception {
-    	lineMessagingClientFactory.get(event.getReplyToken())
+    	lineMessagingClientFactory.get(channelTokenCache.channelToken(event.getReplyToken()))
     		.pushMessage(new PushMessage(event.getSource().getSenderId(), new TextMessage(event.getMessage().getText())));
 //    	return new TextMessage(event.getMessage().getText());
     }
