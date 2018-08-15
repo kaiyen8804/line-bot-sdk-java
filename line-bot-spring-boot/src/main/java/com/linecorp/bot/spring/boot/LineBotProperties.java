@@ -42,7 +42,7 @@ public class LineBotProperties {
      * @see ChannelTokenSupplyMode
      */
     @NotNull
-    private ChannelTokenSupplyMode channelTokenSupplyMode = ChannelTokenSupplyMode.FIXED;
+    private ChannelTokenSupplyMode channelTokenSupplyMode = ChannelTokenSupplyMode.SUPPLIER;
 
     /**
      * Channel acccess token.
@@ -102,7 +102,7 @@ public class LineBotProperties {
          * REST endpoint path of dispatcher.
          */
         @NotNull
-        String path = "/callback";
+        String path = "/callback/{handlerPath}";
     }
 
     public enum ChannelTokenSupplyMode {
