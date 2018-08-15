@@ -7,12 +7,12 @@ import org.springframework.stereotype.Component;
 
 import com.google.common.collect.Maps;
 
-import lombok.Setter;
+import lombok.Data;
 
+@Data
 @Component
 @ConfigurationProperties(prefix = "line.bot.channel-token-resolver")
 public class ChannelTokenPropertiesResolverImpl implements ChannelTokenResolver {
-	@Setter
 	private Map<String, String> resolverMap = Maps.newHashMap();
 	
 	@Override
