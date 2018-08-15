@@ -46,16 +46,20 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Builder
 class ReplyByReturnValueConsumer implements Consumer<Object> {
-    @Autowired
     private LineMessagingClientFactory lineMessagingClientFactory;
-	@Autowired
 	private ChannelTokenCache channelTokenCache;
     private final Event originalEvent;
 
     @Component
     static class Factory {
+    	@Autowired
+        private LineMessagingClientFactory lineMessagingClientFactory;
+    	@Autowired
+    	private ChannelTokenCache channelTokenCache;
         ReplyByReturnValueConsumer createForEvent(final Event event) {
             return builder()
+            		.lineMessagingClientFactory(lineMessagingClientFactory)
+            		.channelTokenCache(channelTokenCache)
                     .originalEvent(event)
                     .build();
         }
