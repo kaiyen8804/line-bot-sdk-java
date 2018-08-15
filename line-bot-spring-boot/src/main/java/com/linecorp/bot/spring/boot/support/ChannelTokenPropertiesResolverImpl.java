@@ -10,7 +10,7 @@ import com.google.common.collect.Maps;
 import lombok.Setter;
 
 @Component
-@ConfigurationProperties(prefix = "line.bot")
+@ConfigurationProperties(prefix = "line.bot.channel-token-resolver")
 public class ChannelTokenPropertiesResolverImpl implements ChannelTokenResolver {
 	@Setter
 	private Map<String, String> resolverMap = Maps.newHashMap();
