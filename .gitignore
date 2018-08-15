@@ -27,9 +27,9 @@ hs_err_pid*
 
 # Eclipse
 *.pydevproject
-.project
+**/.project
 .metadata
-/bin/**
+**/bin/**
 /tmp/**
 /tmp/**/*
 *.tmp
@@ -37,8 +37,8 @@ hs_err_pid*
 *.swp
 *~.nib
 local.properties
-.classpath
-.settings/**
+**/.classpath
+**/.settings/**
 .loadpath
 /src/main/resources/rebel.xml
 

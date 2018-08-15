@@ -16,7 +16,6 @@
 
 package com.example.bot.spring.echo;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
@@ -25,8 +24,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import com.google.common.collect.Lists;
-import com.linecorp.bot.client.LineMessagingClient;
-import com.linecorp.bot.model.ReplyMessage;
+import com.linecorp.bot.model.PushMessage;
 import com.linecorp.bot.model.event.Event;
 import com.linecorp.bot.model.event.JoinEvent;
 import com.linecorp.bot.model.event.MessageEvent;
@@ -36,6 +34,7 @@ import com.linecorp.bot.model.message.Message;
 import com.linecorp.bot.model.message.TextMessage;
 import com.linecorp.bot.spring.boot.annotation.EventMapping;
 import com.linecorp.bot.spring.boot.annotation.LineMessageHandler;
+import com.linecorp.bot.spring.boot.support.LineMessagingClientFactory;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -45,34 +44,29 @@ import lombok.extern.slf4j.Slf4j;
 public class EchoApplication {
 	
 	protected List<String> groupIds = Lists.newArrayList();
-	@Autowired
-	private LineMessagingClient lineMessagingClient;
+    @Autowired
+    private LineMessagingClientFactory lineMessagingClientFactory;
 	
     public static void main(String[] args) {
         SpringApplication.run(EchoApplication.class, args);
     }
     
     @EventMapping
-    public Message handleTextMessageEvent(MessageEvent<TextMessageContent> event) throws Exception {
-//        lineMessagingClient.pushMessage(new PushMessage(event.getSource().getSenderId(), new TextMessage(event.getMessage().getText())));
-    	return new TextMessage(event.getMessage().getText());
+    public void handleTextMessageEvent(MessageEvent<TextMessageContent> event) throws Exception {
+    	lineMessagingClientFactory.get(event.getReplyToken())
+    		.pushMessage(new PushMessage(event.getSource().getSenderId(), new TextMessage(event.getMessage().getText())));
+//    	return new TextMessage(event.getMessage().getText());
     }
     
     @EventMapping
-    public void handleJoinEvent(JoinEvent event) {
-    	try {
-	        String replyToken = event.getReplyToken();
-	        lineMessagingClient
-	                .replyMessage(new ReplyMessage(replyToken, Collections.singletonList(new TextMessage("Welcome to iEN"))))
-	                .get();	        
-	        if(event.getSource() instanceof GroupSource) {
-	        	String groupId = ((GroupSource) event.getSource()).getGroupId(); 
-	        	groupIds.add(groupId);
-	        	log.info("group Id: {}", groupId);
-	        }
-    	} catch(InterruptedException | ExecutionException e) {
-    		throw new RuntimeException(e);
-    	}
+    public Message handleJoinEvent(JoinEvent event) {
+	    if(event.getSource() instanceof GroupSource) {
+        	String groupId = ((GroupSource) event.getSource()).getGroupId(); 
+        	groupIds.add(groupId);
+        	log.info("group Id: {}", groupId);
+        	return new TextMessage("Welcome to iEN");
+        }	            	
+    	return null;
     }
 
     @EventMapping

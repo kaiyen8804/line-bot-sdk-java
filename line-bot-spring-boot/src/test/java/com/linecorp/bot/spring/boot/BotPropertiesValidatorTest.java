@@ -20,6 +20,7 @@ import static com.linecorp.bot.spring.boot.LineBotProperties.ChannelTokenSupplyM
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hibernate.validator.internal.engine.path.PathImpl.createPathFromString;
 
+import java.util.Collections;
 import java.util.Set;
 
 import javax.validation.ConstraintViolation;
@@ -44,7 +45,7 @@ public class BotPropertiesValidatorTest {
         // Do
         Set<ConstraintViolation<LineBotProperties>> constraintViolations =
                 VALIDATOR.validate(new LineBotProperties() {{
-                    setChannelSecret("SECRET");
+                    setChannelSecrets(Collections.singletonList("SECRET"));
                     setChannelToken("TOKEN");
                 }});
 
@@ -57,7 +58,7 @@ public class BotPropertiesValidatorTest {
         // Do
         Set<ConstraintViolation<LineBotProperties>> constraintViolations =
                 VALIDATOR.validate(new LineBotProperties() {{
-                    setChannelSecret("SECRET");
+                    setChannelSecrets(Collections.singletonList("SECRET"));
                 }});
 
         //Verify
@@ -75,7 +76,7 @@ public class BotPropertiesValidatorTest {
         Set<ConstraintViolation<LineBotProperties>> constraintViolations =
                 VALIDATOR.validate(new LineBotProperties() {{
                     setChannelTokenSupplyMode(SUPPLIER);
-                    setChannelSecret("SECRET");
+                    setChannelSecrets(Collections.singletonList("SECRET"));
                 }});
 
         //Verify
@@ -88,7 +89,7 @@ public class BotPropertiesValidatorTest {
         Set<ConstraintViolation<LineBotProperties>> constraintViolations =
                 VALIDATOR.validate(new LineBotProperties() {{
                     setChannelTokenSupplyMode(SUPPLIER);
-                    setChannelSecret("SECRET");
+                    setChannelSecrets(Collections.singletonList("SECRET"));
                     setChannelToken("TOKEN");
                 }});
 

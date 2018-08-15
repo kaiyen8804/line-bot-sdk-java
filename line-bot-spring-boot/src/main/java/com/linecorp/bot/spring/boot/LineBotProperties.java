@@ -16,7 +16,7 @@
 
 package com.linecorp.bot.spring.boot;
 
-import java.net.URI;
+import java.util.List;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -55,7 +55,7 @@ public class LineBotProperties {
      */
     @Valid
     @NotNull
-    private String channelSecret;
+    private List<String> channelSecrets;
 
     @Valid
     @NotNull
@@ -102,7 +102,7 @@ public class LineBotProperties {
          * REST endpoint path of dispatcher.
          */
         @NotNull
-        URI path = URI.create("/callback");
+        String path = "/callback";
     }
 
     public enum ChannelTokenSupplyMode {

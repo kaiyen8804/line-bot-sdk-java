@@ -17,6 +17,7 @@
 package com.linecorp.bot.spring.boot;
 
 import java.nio.charset.StandardCharsets;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
@@ -56,7 +57,10 @@ public class LineBotWebMvcBeans {
     @Bean
     public LineSignatureValidator lineSignatureValidator() {
         return new LineSignatureValidator(
-                lineBotProperties.getChannelSecret().getBytes(StandardCharsets.US_ASCII));
+                lineBotProperties.getChannelSecrets().stream()
+                	.map(channelSecret -> channelSecret.getBytes(StandardCharsets.US_ASCII))
+                	.collect(Collectors.toList())
+        );
     }
 
     /**

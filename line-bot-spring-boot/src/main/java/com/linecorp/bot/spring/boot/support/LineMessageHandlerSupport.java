@@ -35,13 +35,13 @@ import org.springframework.context.annotation.Import;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.core.annotation.AnnotatedElementUtils;
 import org.springframework.util.ReflectionUtils;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.google.common.annotations.Beta;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
-
 import com.linecorp.bot.model.event.Event;
 import com.linecorp.bot.model.event.MessageEvent;
 import com.linecorp.bot.model.event.ReplyEvent;
@@ -80,14 +80,22 @@ public class LineMessageHandlerSupport {
     private final ReplyByReturnValueConsumer.Factory returnValueConsumerFactory;
     private final ConfigurableApplicationContext applicationContext;
 
+    private final ChannelTokenResolver channelTokenResolver;
+    private final ChannelTokenCache channelTokenCache;
+
     volatile List<HandlerMethod> eventConsumerList;
 
     @Autowired
     public LineMessageHandlerSupport(
             final ReplyByReturnValueConsumer.Factory returnValueConsumerFactory,
-            final ConfigurableApplicationContext applicationContext) {
+            final ConfigurableApplicationContext applicationContext,
+            final ChannelTokenResolver channelTokenResolver,
+            final ChannelTokenCache channelTokenCache
+            ) {
         this.returnValueConsumerFactory = returnValueConsumerFactory;
         this.applicationContext = applicationContext;
+        this.channelTokenResolver = channelTokenResolver;
+        this.channelTokenCache = channelTokenCache;
 
         applicationContext.addApplicationListener(event -> {
             if (event instanceof ContextRefreshedEvent) {
@@ -169,9 +177,15 @@ public class LineMessageHandlerSupport {
         int priority;
     }
 
-    @PostMapping("${line.bot.handler.path:/callback}")
-    public void callback(@LineBotMessages List<Event> events) {
-        events.forEach(this::dispatch);
+    @PostMapping("${line.bot.handler.path:/callback/{handlerPath}}")
+    public void callback(@PathVariable final String handlerPath, @LineBotMessages List<Event> events) {
+    	log.info("Receive call back of handlerPath - {}", handlerPath);
+        events.forEach(event -> {
+        	if(event instanceof ReplyEvent) {
+        		channelTokenCache.set(((ReplyEvent) event).getReplyToken(), channelTokenResolver.resolve(handlerPath));
+        	}
+        	dispatch(event);
+        });
     }
 
     @VisibleForTesting

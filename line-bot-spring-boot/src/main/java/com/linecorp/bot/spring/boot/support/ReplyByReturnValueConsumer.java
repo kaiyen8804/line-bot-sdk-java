@@ -27,8 +27,6 @@ import org.springframework.stereotype.Component;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
-
-import com.linecorp.bot.client.LineMessagingClient;
 import com.linecorp.bot.model.ReplyMessage;
 import com.linecorp.bot.model.event.Event;
 import com.linecorp.bot.model.event.ReplyEvent;
@@ -48,21 +46,16 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Builder
 class ReplyByReturnValueConsumer implements Consumer<Object> {
-    private final LineMessagingClient lineMessagingClient;
+    @Autowired
+    private LineMessagingClientFactory lineMessagingClientFactory;
+	@Autowired
+	private ChannelTokenCache channelTokenCache;
     private final Event originalEvent;
 
     @Component
     static class Factory {
-        private final LineMessagingClient lineMessagingClient;
-
-        @Autowired
-        Factory(final LineMessagingClient lineMessagingClient) {
-            this.lineMessagingClient = lineMessagingClient;
-        }
-
         ReplyByReturnValueConsumer createForEvent(final Event event) {
             return builder()
-                    .lineMessagingClient(lineMessagingClient)
                     .originalEvent(event)
                     .build();
         }
@@ -105,8 +98,10 @@ class ReplyByReturnValueConsumer implements Consumer<Object> {
 
     private void reply(final List<Message> messages) {
         final ReplyEvent replyEvent = (ReplyEvent) originalEvent;
-        lineMessagingClient.replyMessage(new ReplyMessage(replyEvent.getReplyToken(), messages))
-                           .whenComplete(this::logging);
+        String replyToken = replyEvent.getReplyToken();
+        lineMessagingClientFactory.get(channelTokenCache.channelToken(replyToken))
+        	.replyMessage(new ReplyMessage(replyToken, messages))
+        	.whenComplete(this::logging);
         // DO NOT BLOCK HERE, otherwise, next message processing will be BLOCKED.
     }
 
