@@ -1,7 +1,5 @@
 line.bot:  
-  channel-secrets: 
-    - '11005b13a7453dd45e13c7eb1af6afc9'
-    - '9a9ed8a4a9353420d39326d650d76cb0'
+  channel-secrets: '11005b13a7453dd45e13c7eb1af6afc9,9a9ed8a4a9353420d39326d650d76cb0'
   handler.path: '/callback/{handlerPath}'
   channel-token-resolver.resolver-map:
     '1': '6fujLXbMVAFMVRounTU+JU2QOp+xJJPVebXQpy+wHDNzJs9Fig/AEZdBpqab1Mrr41KVO55JlBABWq1TA68zB9cY3n6ZKOaqEwzG+v/0UNtVlutEebmA+BxNFWAht49ckabL7Y1wI/BGGuq+Z7c2jgdB04t89/1O/w1cDnyilFU='

@@ -21,6 +21,7 @@ import java.util.List;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.validation.annotation.Validated;
 
@@ -55,6 +56,7 @@ public class LineBotProperties {
      */
     @Valid
     @NotNull
+    @Value("#{'${line.bot.channel-secrets}'.split(',')}") 
     private List<String> channelSecrets;
 
     @Valid

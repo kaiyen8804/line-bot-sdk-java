@@ -19,8 +19,10 @@ package com.example.bot.spring.echo;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
 
 import com.google.common.collect.Lists;
 import com.linecorp.bot.model.PushMessage;
@@ -31,6 +33,7 @@ import com.linecorp.bot.model.event.message.TextMessageContent;
 import com.linecorp.bot.model.event.source.GroupSource;
 import com.linecorp.bot.model.message.Message;
 import com.linecorp.bot.model.message.TextMessage;
+import com.linecorp.bot.spring.boot.LineBotProperties;
 import com.linecorp.bot.spring.boot.annotation.EventMapping;
 import com.linecorp.bot.spring.boot.annotation.LineMessageHandler;
 import com.linecorp.bot.spring.boot.support.ChannelTokenCache;
@@ -51,6 +54,13 @@ public class EchoApplication {
 	
     public static void main(String[] args) {
         SpringApplication.run(EchoApplication.class, args);
+    }
+    
+    @Bean
+    CommandLineRunner debug(LineBotProperties lineBotProperties) {
+    	return args -> {
+    		log.info("lineBotProperties = {}", lineBotProperties);
+    	};
     }
     
     @EventMapping
