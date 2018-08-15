@@ -186,6 +186,7 @@ public class LineMessageHandlerSupport {
         	}
         	dispatch(event);
         });
+        log.info("Status of channelTokenCache - {}", channelTokenCache);
     }
 
     @VisibleForTesting

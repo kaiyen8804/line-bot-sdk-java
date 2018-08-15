@@ -99,6 +99,7 @@ class ReplyByReturnValueConsumer implements Consumer<Object> {
     private void reply(final List<Message> messages) {
         final ReplyEvent replyEvent = (ReplyEvent) originalEvent;
         String replyToken = replyEvent.getReplyToken();
+        log.info("ReplyToken - {}, Status of channelTokenCache - {}", replyToken, channelTokenCache);
         lineMessagingClientFactory.get(channelTokenCache.channelToken(replyToken))
         	.replyMessage(new ReplyMessage(replyToken, messages))
         	.whenComplete(this::logging);

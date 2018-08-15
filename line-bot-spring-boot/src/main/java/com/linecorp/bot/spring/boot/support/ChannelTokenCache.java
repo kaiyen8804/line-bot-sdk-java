@@ -6,6 +6,9 @@ import org.springframework.stereotype.Component;
 
 import com.google.common.collect.Maps;
 
+import lombok.ToString;
+
+@ToString
 @Component
 public class ChannelTokenCache {
 	private Map<String, String> replyTokenTochannelTokenMap = Maps.newConcurrentMap();
