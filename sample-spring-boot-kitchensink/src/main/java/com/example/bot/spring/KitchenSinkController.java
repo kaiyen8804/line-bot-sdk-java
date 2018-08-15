@@ -126,7 +126,7 @@ public class KitchenSinkController {
                             "-resize", "240x",
                             jpg.path.toString(),
                             previewImg.path.toString());
-                    reply(((MessageEvent) event).getReplyToken(),
+                    reply(event.getReplyToken(),
                           new ImageMessage(jpg.getUri(), jpg.getUri()));
                 });
     }
@@ -154,7 +154,7 @@ public class KitchenSinkController {
                     system("convert",
                            mp4.path + "[0]",
                            previewImg.path.toString());
-                    reply(((MessageEvent) event).getReplyToken(),
+                    reply(event.getReplyToken(),
                           new VideoMessage(mp4.getUri(), previewImg.uri));
                 });
     }
@@ -420,6 +420,9 @@ public class KitchenSinkController {
                 break;
             case "flex":
                 this.reply(replyToken, new ExampleFlexMessageSupplier().get());
+                break;
+            case "quickreply":
+                this.reply(replyToken, new MessageWithQuickReplySupplier().get());
                 break;
             default:
                 log.info("Returns echo message {}: {}", replyToken, text);
