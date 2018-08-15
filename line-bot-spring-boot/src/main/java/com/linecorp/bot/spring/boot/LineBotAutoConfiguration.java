@@ -20,8 +20,11 @@ import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 
+import com.linecorp.bot.spring.boot.support.ChannelTokenCache;
 import com.linecorp.bot.spring.boot.support.ChannelTokenPropertiesResolverImpl;
+import com.linecorp.bot.spring.boot.support.LineMessageHandlerSupport;
 import com.linecorp.bot.spring.boot.support.LineMessagingClientFactory;
 
 /**
@@ -30,9 +33,15 @@ import com.linecorp.bot.spring.boot.support.LineMessagingClientFactory;
 @Configuration
 @AutoConfigureAfter(LineBotWebMvcConfigurer.class)
 @EnableConfigurationProperties({LineBotProperties.class, ChannelTokenPropertiesResolverImpl.class})
+@Import(LineMessageHandlerSupport.class)
 public class LineBotAutoConfiguration {
 	@Bean
 	public LineMessagingClientFactory lineMessagingClientFactory() {
 		return new LineMessagingClientFactory();
+	}
+	
+	@Bean
+	public ChannelTokenCache channelTokenCache() {
+		return new ChannelTokenCache();
 	}
 }
