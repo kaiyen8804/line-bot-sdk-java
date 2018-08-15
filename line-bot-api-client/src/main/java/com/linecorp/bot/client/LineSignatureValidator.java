@@ -19,7 +19,6 @@ package com.linecorp.bot.client;
 import java.security.InvalidKeyException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.Arrays;
 import java.util.Base64;
 import java.util.Collections;
 import java.util.List;
@@ -28,8 +27,6 @@ import java.util.stream.IntStream;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
-
-import com.google.common.collect.Lists;
 
 import lombok.NonNull;
 import lombok.ToString;
