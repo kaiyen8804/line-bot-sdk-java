@@ -18,6 +18,8 @@ package com.linecorp.bot.spring.boot;
 
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.cache.CacheManager;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -31,6 +33,7 @@ import com.linecorp.bot.spring.boot.support.LineMessagingClientFactory;
  * Also refers {@link LineBotWebMvcBeans} for web only beans definition.
  */
 @Configuration
+@EnableCaching
 @AutoConfigureAfter(LineBotWebMvcConfigurer.class)
 @EnableConfigurationProperties({LineBotProperties.class, ChannelTokenPropertiesResolverImpl.class})
 @Import(LineMessageHandlerSupport.class)
@@ -41,7 +44,7 @@ public class LineBotAutoConfiguration {
 	}
 	
 	@Bean
-	public ChannelTokenCache channelTokenCache() {
-		return new ChannelTokenCache();
+	public ChannelTokenCache channelTokenCache(CacheManager manager) {
+		return new ChannelTokenCache(manager);
 	}
 }

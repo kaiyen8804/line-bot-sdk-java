@@ -1,2 +1,4 @@
 line.bot:  
   handler.path: '/callback/{handlerPath}' 
+spring:
+  cache.jcache.config: classpath:ehcache.xml

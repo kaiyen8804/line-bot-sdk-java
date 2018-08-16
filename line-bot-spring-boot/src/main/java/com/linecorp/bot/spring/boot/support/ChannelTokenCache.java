@@ -1,23 +1,27 @@
 package com.linecorp.bot.spring.boot.support;
 
-import java.util.Map;
-
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.Cache;
+import org.springframework.cache.CacheManager;
 import org.springframework.stereotype.Component;
-
-import com.google.common.collect.Maps;
 
 import lombok.ToString;
 
 @ToString
 @Component
 public class ChannelTokenCache {
-	private Map<String, String> replyTokenTochannelTokenMap = Maps.newConcurrentMap();
+	private Cache replyTokenTochannelTokenCache;
+	
+	@Autowired
+	public ChannelTokenCache(CacheManager manager) {
+		this.replyTokenTochannelTokenCache = manager.getCache("default");
+	}
 	
 	public void set(String replyToken, String channelToken) {
-		replyTokenTochannelTokenMap.put(replyToken, channelToken);
+		replyTokenTochannelTokenCache.put(replyToken, channelToken);
 	}
 	
 	public String channelToken(String replyToken) {
-		return replyTokenTochannelTokenMap.remove(replyToken);
+		return (String) replyTokenTochannelTokenCache.get(replyToken).get();
 	}
 }

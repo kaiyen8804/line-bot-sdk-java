@@ -20,6 +20,11 @@ dependencies {
     compile project(':line-bot-servlet')
     compile 'org.springframework.boot:spring-boot-autoconfigure'
     compile 'org.springframework.boot:spring-boot-starter-web'
+	compile 'org.springframework.boot:spring-boot-starter-cache'
+	compile 'org.ehcache:ehcache'
+	compile 'javax.cache:cache-api'
+	
+	    
 
     optional 'javax.validation:validation-api'
 }
