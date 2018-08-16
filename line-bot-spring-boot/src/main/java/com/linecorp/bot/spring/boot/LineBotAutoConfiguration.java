@@ -21,13 +21,16 @@ import java.net.URISyntaxException;
 import javax.cache.Caching;
 
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Condition;
+import org.springframework.context.annotation.ConditionContext;
+import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.core.type.AnnotatedTypeMetadata;
 
 import com.linecorp.bot.spring.boot.support.ChannelTokenCache;
 import com.linecorp.bot.spring.boot.support.ChannelTokenPropertiesResolverImpl;
@@ -54,9 +57,16 @@ public class LineBotAutoConfiguration {
 	}
 	
 	@Bean
-	@ConditionalOnProperty(name = "spring.cache.jcache.config", matchIfMissing = true)
+	@Conditional(MissingJCacheConfigCondition.class)
 	public javax.cache.CacheManager cacheManager() throws URISyntaxException {
 		return Caching.getCachingProvider()
 			.getCacheManager(getClass().getResource("ehcache.xml").toURI(), getClass().getClassLoader());
+	}
+	
+	static class MissingJCacheConfigCondition implements Condition {
+		@Override
+		public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata) {
+			return !context.getEnvironment().containsProperty("spring.cache.jcache.config");
+		}		
 	}
 }
