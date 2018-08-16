@@ -22,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cache.CacheManager;
 import org.springframework.context.annotation.Bean;
 
 import com.google.common.collect.Lists;
@@ -57,9 +58,10 @@ public class EchoApplication {
     }
     
     @Bean
-    CommandLineRunner debug(LineBotProperties lineBotProperties) {
+    CommandLineRunner debug(LineBotProperties lineBotProperties, CacheManager manager) {
     	return args -> {
     		log.info("lineBotProperties = {}", lineBotProperties);
+    		log.info("cache = {}", manager.getCache("channelToken"));
     	};
     }
     

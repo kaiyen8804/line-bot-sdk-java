@@ -4,16 +4,12 @@
         http://www.ehcache.org/v3 http://www.ehcache.org/schema/ehcache-core-3.0.xsd
         http://www.ehcache.org/v3/jsr107 http://www.ehcache.org/schema/ehcache-107-ext-3.0.xsd">
 
-	<service>
-		<jsr107:defaults>
-			<jsr107:cache name="channelToken" template="default" />
-		</jsr107:defaults>
-	</service>
-
 	<cache-template name="default">
 		<expiry>
 			<ttl unit="minutes">2</ttl>
 		</expiry>
 		<heap unit="entries">5000</heap>
 	</cache-template>
+
+	<cache alias="channelToken" uses-template="default" />
 </config>

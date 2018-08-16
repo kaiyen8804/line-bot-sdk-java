@@ -14,7 +14,7 @@ public class ChannelTokenCache {
 	
 	@Autowired
 	public ChannelTokenCache(CacheManager manager) {
-		this.replyTokenTochannelTokenCache = manager.getCache("default");
+		replyTokenTochannelTokenCache = manager.getCache("channelToken");
 	}
 	
 	public void set(String replyToken, String channelToken) {
