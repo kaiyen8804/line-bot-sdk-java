@@ -16,21 +16,14 @@
 
 package com.linecorp.bot.spring.boot;
 
-import java.net.URISyntaxException;
-
-import javax.cache.Caching;
-
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Condition;
-import org.springframework.context.annotation.ConditionContext;
-import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
-import org.springframework.core.type.AnnotatedTypeMetadata;
+import org.springframework.context.annotation.PropertySource;
 
 import com.linecorp.bot.spring.boot.support.ChannelTokenCache;
 import com.linecorp.bot.spring.boot.support.ChannelTokenPropertiesResolverImpl;
@@ -44,6 +37,7 @@ import com.linecorp.bot.spring.boot.support.LineMessagingClientFactory;
 @EnableCaching
 @AutoConfigureAfter(LineBotWebMvcConfigurer.class)
 @EnableConfigurationProperties({LineBotProperties.class, ChannelTokenPropertiesResolverImpl.class})
+@PropertySource("classpath:cache.properties")
 @Import(LineMessageHandlerSupport.class)
 public class LineBotAutoConfiguration {
 	@Bean
@@ -54,19 +48,5 @@ public class LineBotAutoConfiguration {
 	@Bean
 	public ChannelTokenCache channelTokenCache(CacheManager manager) {
 		return new ChannelTokenCache(manager);
-	}
-	
-	@Bean
-	@Conditional(MissingJCacheConfigCondition.class)
-	public javax.cache.CacheManager cacheManager() throws URISyntaxException {
-		return Caching.getCachingProvider()
-			.getCacheManager(getClass().getResource("ehcache.xml").toURI(), getClass().getClassLoader());
-	}
-	
-	static class MissingJCacheConfigCondition implements Condition {
-		@Override
-		public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata) {
-			return !context.getEnvironment().containsProperty("spring.cache.jcache.config");
-		}		
 	}
 }

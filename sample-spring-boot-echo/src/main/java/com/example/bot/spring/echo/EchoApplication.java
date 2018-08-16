@@ -38,6 +38,7 @@ import com.linecorp.bot.spring.boot.LineBotProperties;
 import com.linecorp.bot.spring.boot.annotation.EventMapping;
 import com.linecorp.bot.spring.boot.annotation.LineMessageHandler;
 import com.linecorp.bot.spring.boot.support.ChannelTokenCache;
+import com.linecorp.bot.spring.boot.support.ChannelTokenPropertiesResolverImpl;
 import com.linecorp.bot.spring.boot.support.LineMessagingClientFactory;
 
 import lombok.extern.slf4j.Slf4j;
@@ -58,9 +59,13 @@ public class EchoApplication {
     }
     
     @Bean
-    CommandLineRunner debug(LineBotProperties lineBotProperties, CacheManager manager) {
+    CommandLineRunner debug(LineBotProperties lineBotProperties, 
+    		ChannelTokenPropertiesResolverImpl channelTokenResolver,
+    		ChannelTokenCache channelTokenCache,  
+    		CacheManager manager) {
     	return args -> {
     		log.info("lineBotProperties = {}", lineBotProperties);
+    		log.info("channelTokenResolver = {}", channelTokenResolver);
     		log.info("cache = {}", manager.getCache("channelToken"));
     	};
     }
