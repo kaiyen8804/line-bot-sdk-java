@@ -182,11 +182,12 @@ public class LineMessageHandlerSupport {
     	log.info("Receive call back of handlerPath - {}", handlerPath);
         events.forEach(event -> {
         	if(event instanceof ReplyEvent) {
-        		channelTokenCache.set(((ReplyEvent) event).getReplyToken(), channelTokenResolver.resolve(handlerPath));
+        		String replyToken = ((ReplyEvent) event).getReplyToken();
+        		channelTokenCache.set(replyToken, channelTokenResolver.resolve(handlerPath));
+        		log.info("Value of channelTokenCache[{}] - {}", replyToken, channelTokenCache.channelToken(replyToken));	
         	}
         	dispatch(event);
-        });
-        log.info("Status of channelTokenCache - {}", channelTokenCache);
+        });        
     }
 
     @VisibleForTesting

@@ -7,19 +7,7 @@
 	<cache-template name="default">
 		<expiry>
 			<ttl unit="minutes">2</ttl>
-		</expiry>		
-		<listeners>
-			<listener>
-				<class>org.terracotta.ehcache.EventLogger</class>
-				<event-firing-mode>ASYNCHRONOUS</event-firing-mode>
-				<event-ordering-mode>UNORDERED</event-ordering-mode>
-				<events-to-fire-on>CREATED</events-to-fire-on>
-				<events-to-fire-on>UPDATED</events-to-fire-on>
-				<events-to-fire-on>EXPIRED</events-to-fire-on>
-				<events-to-fire-on>REMOVED</events-to-fire-on>
-				<events-to-fire-on>EVICTED</events-to-fire-on>
-			</listener>
-		</listeners>
+		</expiry>
 		<heap unit="entries">5000</heap>
 	</cache-template>
 
