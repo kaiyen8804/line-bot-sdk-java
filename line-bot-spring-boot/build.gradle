@@ -24,7 +24,5 @@ dependencies {
 	compile 'org.ehcache:ehcache'
 	compile 'javax.cache:cache-api'
 	
-	    
-
     optional 'javax.validation:validation-api'
 }
